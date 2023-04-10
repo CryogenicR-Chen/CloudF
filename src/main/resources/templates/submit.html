@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Login Modal -->
+<div class="subscribe-newsletter-area">
+    <div class="modal fade" id="subsModal" tabindex="-1" role="dialog" aria-labelledby="subsModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-body">
+                    <h5 class="title">Email</h5>
+                    <form th:action="@{/login/mail}" class="newsletterForm" method="post" style="display: inline-block">
+                        <input type="text" name="mail" id="subscribesForm2" placeholder="Your e-mail here">
+                        <input type="text" name="verificationNumber" id="passwordForm"
+                               placeholder="Your verification word">
+                        <button type="submit" class="btn original-btn">Login</button>
+                        <button id="send" type="button" class="btn original-btn" style="padding: 0 20px">Send verification code</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="subscribe-newsletter-area">
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-body">
+                    <h5 class="title">Email</h5>
+                    <form th:action="@{/register/mail}" class="newsletterForm" method="post" style="display: inline-block;">
+                        <input type="text" name="mail" id="registerForm2" placeholder="Your e-mail here">
+                        <input type="text" name="verificationNumber" id="registerpasswordForm"
+                               placeholder="Your verification word">
+                        <input type="text" name="name" id="name"
+                               placeholder="Your name">
+                        <input type="text" name="password" id="password"
+                               placeholder="Your password">
+                        <button type="submit" class="btn original-btn" style="padding: 0 24px">Register</button>
+                        <button id="registerSend" type="button" class="btn original-btn"  style="padding: 0 20px">Send verification code</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#send").click(function () {
+        var mail = document.getElementById("subscribesForm2").value;
+        $.ajax({
+            type: 'post',
+            url: "/verify",
+            // withCredentials:true,
+            data: {mail: mail},
+            success: function (result) {
+                alert("Email has sent to you")
+            }
+        });
+    });
+
+    $("#registerSend").click(function () {
+        var mail = document.getElementById("registerForm2").value;
+        $.ajax({
+            type: 'post',
+            url: "/verify",
+            // withCredentials:true,
+            data: {
+                mail: mail
+            },
+            success: function (result) {
+                alert("Email has sent to you")
+            }
+        });
+    });
+</script>
+
+</body>
+
+
+
+
+</html>

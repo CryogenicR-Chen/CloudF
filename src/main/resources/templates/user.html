@@ -1,0 +1,376 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: htmlhead" th:with="title='favorites'">
+
+</head>
+<body>
+<section>
+    <div class="content-wrapper">
+        <div class="unwrap">
+            <div class="mast" th:style="'background-image: url(/img/profile-bg.jpg);'">
+                <div class="bg-cover"><a href="javascript:void(0);"
+                                         th:onclick="'locationUrl(\'/uploadBackground\',\'\');'" id="background">
+                </a>
+                    <div class="p-xl text-center text-white"><a href="javascript:void(0);">
+
+                        <img id="photo" th:src="@{/img/core-img/default.jpeg}" alt="" class="img-thumbnail img-circle thumb128"/></a>
+                        <input th:id="photoSrc" type="hidden" name="photoSrc" th:value="${user.profilePhoto}">
+
+
+                        <h3 class="m0 mt" th:text="${user.name}" id="userUserName">用户昵称</h3>
+                        <p th:if="${myself == 'YES'}" th:text="${user.mail}">123456789@qq.com</p>
+                        <!--                        <p th:text="${user.intro== null ? '暂无简介': user.intro}" id="userIntroduction">暂无简介</p>-->
+                        <p></p>
+                        <a href="javascript:void(0);" th:if="${myself == 'NO'}" id="follow"></a>
+                        <a href="javascript:void(0);" th:if="${myself == 'NO'}" class="btn btn-success"
+                           data-toggle="modal" data-target="#modal-letter">私信</a>
+                        <button th:id="followButton" th:if="(${myself == false} and ${isFollow == false})" type="submit" class="btn"
+                                style="color: black; font-size : 15px; left: 225px; top: 5px;box-shadow:0 0 0px" onclick="changeFollow()">
+                            Subscribe
+                        </button>
+                        <button th:id="followButton" th:if="(${myself == false} and ${isFollow == true})" type="submit" class="btn"
+                                style="color: black; font-size : 15px; left: 225px; top: 5px;box-shadow:0 0 0px" onclick="changeFollow()">
+                            Subscribed
+                        </button>
+                        <input th:if="${myself == false}" th:id="'followInput'" type="hidden" name="followed" th:value="${isFollow}" />
+                        <input th:if="${myself == false}" th:id="'userID'" type="hidden" name="followed" th:value="${user.id}" />
+
+                        <form id="uploadForm" th:action="@{/upload/}" method="post" enctype="multipart/form-data">
+                            <input onchange="updatePhoto()" id="file-upload" type="file" accept="image/*" name="file"
+                                   style="display: none"/>
+                        </form>
+                        <button th:if="${myself}" onclick="uploadPhoto()" type="submit" class="btn"
+                                style="color: black; font-size : 15px; left: 225px; top: 5px;box-shadow:0 0 0px">Change
+                            Photo
+                        </button>
+
+
+                        <a th:href="@{/logout}" style="font-family: inherit;">
+                            <button th:if="${myself}" type="submit" class="btn"
+                                    style="color: black; font-size : 15px; left: 225px; top: 5px;box-shadow:0 0 0px">Log
+                                Out
+                            </button>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="text-center bg-gray-dark p-lg mb" style="height:80px">
+                    <div class="col-xs-4 br">
+
+                        <a th:if="${index == 1} " th:href="@{'/user/my?id='+${user.id}+''}"
+                           style="text-decoration-line: none; color: blue">
+                            <h3 class="m0" th:text="${collectCount}" id="totalCount">4</h3>
+                            <p class="m0"><span>收藏</span>
+                            </p>
+                        </a>
+
+                        <a th:unless="${index == 1}" th:href="@{'/user/my?id='+${user.id}+''}"
+                           style="text-decoration-line: none; color: white">
+                            <h3 class="m0" th:text="${collectCount}" id="totalCount">4</h3>
+                            <p class="m0"><span>收藏</span>
+
+                            </p>
+                        </a>
+
+                    </div>
+
+                    <div class="col-xs-4 br">
+                        <a th:if="${index == 2}" th:href="@{'/user/my/subscribed?id='+${user.id}+''}"
+                           style="text-decoration-line: none; color: blue">
+                            <h3 class="m0" th:text="${follow}">0</h3>
+                            <p class="m0"><span>关注</span></p>
+                        </a>
+                        <a th:unless="${index == 2}" th:href="@{'/user/my/subscribed?id='+${user.id}+''}"
+                           style="text-decoration-line: none; color: white">
+                            <h3 class="m0" th:text="${follow}">0</h3>
+                            <p class="m0"><span>关注</span></p>
+                        </a>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <a th:if="${index == 3}" th:href="@{'/user/my/followers?id='+${user.id}+''}"
+                           style="text-decoration-line: none; color: blue">
+                            <h3 class="m0" th:text="${followed}" id="followed">0</h3>
+                            <p class="m0"><span>粉丝</span></p></a>
+                        <a th:unless="${index == 3}" th:href="@{'/user/my/followers?id='+${user.id}+''}"
+                           style="text-decoration-line: none; color: white">
+                            <h3 class="m0" th:text="${followed}" id="followed">0</h3>
+                            <p class="m0"><span>粉丝</span></p></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="collectId" id="collectId"/>
+        <input type="hidden" id="userId" th:value="${user.id}"/>
+        <input type="hidden" id="myself" th:value="${myself}"/>
+    </div>
+</section>
+
+
+<!-- ##### Single Blog Area Start ##### -->
+<div class="single-blog-wrapper section-padding-0-100">
+
+
+    <div class="container">
+        <div class="row">
+            <div th:replace="fragments/moreblogs :: moreblogs"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script th:src="@{/js/collect.js}"></script>
+<script th:src="@{/js/jquery/jquery-2.2.4.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/plugins.js}"></script>
+<script th:src="@{/js/active.js}"></script>
+
+
+<script th:src="@{/js/jquery/jquery-2.2.4.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/plugins.js}"></script>
+<script th:src="@{/js/active.js}"></script>
+
+<script th:src="@{/js/jquery/jquery.cookie.min.js}"></script>
+
+
+<script th:src="@{/js/jquery/jquery.cookie.min.js}"></script>
+<script>
+
+    if($("#photoSrc").val() != '' && $("#photoSrc").val() != null){
+        $("#photo").attr("src", $("#photoSrc").val())
+    }
+    $(function() {
+
+        disLike = function(blogId,blogName) {
+            var stateC = $('#stateC' + blogId).val()
+            var stateL = $('#stateL' + blogId).val()
+            if(stateC === 'false'){
+                stateC = false;
+            }else {
+                stateC = true;
+            }
+            console.log(stateL)
+            if(stateL != '-1'){
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{
+                        "blogId":blogId,
+                        "blogName":blogName
+                    },
+                    url: '/blog/unlike',
+                    success: function(res){
+                        console.log(res)
+                        $("#disLikeS"+blogId).css("color","#FF0000")
+                        $("#spanD"+blogId).css("color","#FF0000")
+                        $("#spanD"+blogId).attr("class","fa fa-thumbs-down")
+                        $('#stateL' + blogId).val(-1)
+                        if(stateC){
+                            changeLike(blogId,blogName);
+                        }
+                    }
+                });
+            }else{
+                $("#disLikeS"+blogId).css("color","#7d98be")
+                $("#spanD"+blogId).css("color","#7d98be")
+                $("#spanD"+blogId).attr("class","fa fa-thumbs-o-down")
+                $('#stateL' + blogId).val(0)
+            }
+        }
+        changeLike = function(blogId,blogName){
+            var userId = $.cookie("id");
+            var voteCount = $("#praiseC" + blogId).val()
+            var state = $('#stateC' + blogId).val()
+            if(state === 'false'){
+                state = false;
+            }else {
+                state = true;
+            }
+            if(userId != null){
+                if(!state){
+                    console.log("like port")
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        dataType: 'json',
+                        data:{
+                            "blogId":blogId,
+                            "voteCount":voteCount,
+                            "blogName":blogName
+                        },
+                        url: '/blog/like',
+                        success: function(like){
+                            $("#likeS"+blogId).text("cancel("+like+")")
+                            $("#likeS"+blogId).css("color","#FF0000")
+                            $("#spanL"+blogId).attr("class","fa fa-thumbs-up")
+                            $("#spanL"+blogId).css("color","#FF0000")
+                            $("#praiseC" + blogId).val(like)
+                            $('#stateC' + blogId).val(true)
+
+                            $("#disLikeS"+blogId).css("color","#7d98be")
+                            $("#spanD"+blogId).css("color","#7d98be")
+                            $("#spanD"+blogId).attr("class","fa fa-thumbs-o-down")
+                            console.log("after change:"+$('#stateC' + blogId).val())
+                        }
+                    });
+                }else{
+                    console.log("unlike port")
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        dataType: 'json',
+                        data:{
+                            "blogId":blogId,
+                            "voteCount":voteCount,
+                            "blogName":blogName
+                        },
+                        url: '/blog/cancel',
+                        success: function(like){
+                            $("#likeS"+blogId).text("upvote("+like+")")
+                            $("#likeS"+blogId).css("color","#7d98be")
+                            $("#spanL"+blogId).attr("class","fa fa-thumbs-o-up")
+                            $("#spanL"+blogId).css("color","#7d98be")
+                            $("#praiseC" + blogId).val(like)
+                            $('#stateC' + blogId).val(false)
+                            console.log("after change:"+$('#stateC' + blogId).val())
+                        }
+                    });
+                }
+
+            }else{
+                window.location.href="/login";
+            }
+        }
+
+
+        userClick = function(blogId,blogName){
+            var userId = $.cookie("id");
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                data:{
+                    "blogId":blogId,
+                    "userId":userId,
+                    "blogName":blogName
+                },
+                url: '/blog/click',
+                success: function(like){
+
+                }
+            });
+        }
+
+    })
+
+</script>
+<script>
+
+    if (window.name != "noReload") {
+        window.name = "noReload";
+        location.reload();
+    } else {
+        window.name = "";
+    }
+</script>
+<script>
+    function uploadPhoto() {
+        $("#file-upload").click()
+    }
+
+    function updatePhoto() {
+        // $("#file-upload").css("display","block")
+        $("#uploadForm").submit()
+    }
+</script>
+
+
+<script type='text/javascript' th:inline="javascript">
+    $(function () {
+        var isFollow = /*[[${isFollow}]]*/;
+        var user = /*[[${user}]]*/;
+        var loginUser = /*[[${loginUser}]]*/;
+        if (isFollow > 0) {
+            $("#follow").attr("class", "btn btn-default");
+            $("#follow").attr("onclick", "changeFollow('unfollow','" + user.id + "')");
+            $("#follow").text("取消关注");
+        } else {
+            $("#follow").attr("class", "btn btn-success");
+            $("#follow").attr("onclick", "changeFollow('follow','" + user.id + "')");
+            $("#follow").text("关注");
+        }
+        $("#standardBtn").click(function () {
+            $("#standard").hide();
+            $("#simple").show();
+            $("#showModel").val("simple");
+        });
+        $("#simpleBtn").click(function () {
+            $("#standard").show();
+            $("#simple").hide();
+            $("#showModel").val("standard");
+        });
+        userLocationUrl("/usercontent/" + user.id + "/0", "userAll");
+        loadUserFavorites();
+        standardStr = "standard";
+        if (user.id == loginUser.id) {
+            $("#background").attr("class", "camerabtn");
+        }
+    });
+
+    function changeFollow() {
+        var status = $("#followInput").val()
+        var id = $("#userID").val()
+        if(status == "false"){
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                data: {'id': id},
+                url: '/user/my/follow',
+
+                success: function (response) {
+                    $("#followButton").text("subscribed")
+                    $("#followInput").val("true")
+                    $("#followed").text(parseInt($("#followed").text())+1)
+
+                }
+            });
+        }else{
+            $.ajax({
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                data: {'id': id},
+                url: '/user/my/unfollow',
+
+                success: function (response) {
+                    $("#followButton").text("subscribe")
+                    $("#followInput").val("false")
+                    $("#followed").text(parseInt($("#followed").text())-1)
+                }
+            });
+        }
+    }
+
+    function loadUserFavorites() {
+        $.ajax({
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/favorites/getFavorites/' + $("#userId").val(),
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+            },
+            success: function (favorites) {
+                initUserFavorites(favorites);
+            }
+        });
+    }
+</script>
+</html>

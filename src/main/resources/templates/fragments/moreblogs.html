@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+    </script>
+</head>
+<body>
+<div th:fragment="moreblogs" th:each="blog : ${blogs}" class="col-12 col-lg-12 blog-post">
+
+    <!-- About Author -->
+    <div class="blog-post-author mt-15 d-flex">
+        <div class="author-thumbnail">
+            <a th:href="@{'/user/my?id='+${blog.userId}+''}" class="author-name">
+                <img th:src="${blog.userUrl}" alt="">
+            </a>
+        </div>
+        <div class="author-info">
+            <a th:onclick="userClick([[${blog.blogId}]],[[${blog.blogName}]])"  th:href="${blog.blogUrl}" class="author-name">
+                <h4 th:text="${blog.blogName}" style="color: #000000;"></h4>
+            </a>
+            <p th:text="${blog.content}"></p>
+            <div class="post-meta">
+                <a th:href="@{'/user/my?id='+${blog.userId}+''}">
+                    <p th:text="${blog.userName}"></p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="pull-right hidden-xxs">
+        <a  th:unless="${blog.isVote}" th:id="'like' + ${blog.blogId}"  class="sharing-action-button" th:style="'display:'+ 'inline-block; color: #7d98be'"    th:onclick="changeLike([[${blog.blogId}]],[[${blog.blogName}]])">
+            <span th:id="'spanL'+${blog.blogId}" class="fa fa-thumbs-o-up"></span>
+            <show th:id="'likeS' + ${blog.blogId}"  th:text="| upvote(${blog.voteCount})|" ></show>
+        </a>
+        <a th:if="${blog.isVote}" th:id="'like' + ${blog.blogId}"  class="sharing-action-button" th:style="'display:'+ 'inline-block; color: #FF0000'"    th:onclick="changeLike([[${blog.blogId}]],[[${blog.blogName}]])">
+            <span th:id="'spanL'+${blog.blogId}" class="fa fa-thumbs-up"></span>
+            <show th:id="'likeS' + ${blog.blogId}"  th:text="| cancel(${blog.voteCount})|" ></show>
+        </a>
+        |
+        <a th:if="${blog.likeLevel != -1}" th:id="'unlike' + ${blog.blogId}"  class="sharing-action-button" th:style="'display:'+ 'inline-block; color: #7d98be'"    th:onclick="disLike([[${blog.blogId}]],[[${blog.blogName}]])">
+            <span th:id="'spanD'+${blog.blogId}" class="fa fa-thumbs-o-down"></span>
+            <show th:id="'disLikeS' + ${blog.blogId}"  th:text="| dislike |" ></show>
+        </a>
+        <a th:if="${blog.likeLevel == -1}" th:id="'unlike' + ${blog.blogId}"  class="sharing-action-button" th:style="'display:'+ 'inline-block; color: #FF0000'"    th:onclick="disLike([[${blog.blogId}]],[[${blog.blogName}]])">
+            <span th:id="'spanD'+${blog.blogId}" class="fa fa-thumbs-down"></span>
+            <show th:id="'disLikeS' + ${blog.blogId}"  th:text="| dislike |" ></show>
+        </a>
+
+        <!-- <if th:id="'unlikel' + ${collect.id}"  th:style="'display:' + @{(${collect.Praise} ? 'inline-block' : 'none')}+ ''" > | </if> -->
+        <input th:id="'praiseC' + ${blog.blogId}" type="hidden" name="praiseC" th:value="${blog.voteCount}" />
+        <input th:id="'stateC' + ${blog.blogId}" type="hidden" name="stateC" th:value="${blog.isVote}" />
+        <input th:id="'stateL' + ${blog.blogId}" type="hidden" name="stateL" th:value="${blog.likeLevel}" />
+        <input th:id="'commentC' + ${blog.blogId}" type="hidden" name="commentC" th:value="${blog.commentCount}" />
+        |<a  class="sharing-action-button btn-comment" href="javascript:void(0);" th:onclick="'switchComment(' + ${blog.blogId} + ');'" > <span class="fa fa-comment-o"></span>
+        <show th:id="'commentS' + ${blog.blogId}" th:text="|评论(${blog.commentCount})|"> 评论(0)</show>
+    </a>
+        <if th:if="${myself== false}" > | </if>
+        <a class="sharing-action-button"  th:if="${myself== false}" th:onclick="'getCollect(' + ${blog.blogId} + ',\'usercontent\');'"> <span class="fa fa-spoon"></span> 收藏 </a>
+    </div>
+
+    <!-- asdf-->
+
+
+
+</div>
+<a th:href="@{/readMore/${nextIndex}}"  style="display: block; position: relative; font-family: inherit; text-align:center; margin:0 auto; top: 20px">
+    <!--                <button th:if="${more == true}" type="submit" class="btn" style="color: black; font-size : 15px; left: 225px; top: 5px;box-shadow:0 0 0px">More Blogs</button>-->
+    <button  type="submit" class="btn" style="color: black; font-size : 15px; left: 225px; top: 5px;box-shadow:0 0 0px">More Blogs</button>
+</a>
+
+
+</body>
+</html>

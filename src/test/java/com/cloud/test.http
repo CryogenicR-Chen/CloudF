@@ -1,0 +1,79 @@
+POST http://localhost:8081/verify
+Content-Type: application/json
+
+{
+  "mail": "2637212633@qq.com",
+  "verificationNumber": 1
+}
+
+###
+POST http://localhost:8081/register/mail
+Content-Type: application/json
+
+{
+  "mail": "2637212633@qq.com",
+  "verificationNumber": 1
+}
+
+###
+POST http://localhost:8081/login/mail
+Content-Type: application/json
+
+{
+  "mail": "jianghan.chen19@student.xjtlu.edu.cn",
+  "name": "jianghan",
+  "verificationNumber": 418399,
+  "password": "123123",
+  "phoneNumber": "1551293326"
+}
+
+###
+POST http://localhost:8081/login/normal
+Content-Type: application/json
+
+{
+"mail": "jianghan.chen19@student.xjtlu.edu.cn",
+"password": "123123"
+}
+
+###
+
+GET http://20.222.12.161:8081/question/search/es?value=Queen
+
+###
+
+POST http://localhost:8081/test
+Content-Type: application/json
+
+{
+  "webDriver":"webdriver.chrome.driver",
+  "driverLocation": "F:\\chromedriver.exe",
+  "mail": "jianghan.chen19@student.xjtlu.edu.cn",
+  "password": "123123",
+  "targetWeb": "http://xoj.codes",
+  "mills": 1000
+}
+
+###
+GET http://localhost:8081/test?web=http://xoj.codes
+
+###
+POST http://localhost:8081/es/insert
+Content-Type: application/json
+
+{
+  "field":"",
+  "id": "1231231231231245236",
+  "index": "website",
+  "obj": {
+    "id":"1414312353211232333421234315",
+    "is_delete": 0,
+    "name": "zh1ihu3",
+    "create_time": 101020,
+    "delete_time": 1233123,
+    "search_str": "zh1ihu3 this is a website3 jianghanchen",
+    "brief_introduction": "this is a website3",
+    "creator": "1223123123",
+    "creator_name": "jianghanchen"
+  }
+}

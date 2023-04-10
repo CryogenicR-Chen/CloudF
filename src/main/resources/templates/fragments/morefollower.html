@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+    </script>
+</head>
+<body>
+<div th:fragment="morefollower" th:each="follower : ${followers}" class="col-12 col-lg-12 blog-post">
+
+    <!-- About Author -->
+    <div class="blog-post-author mt-15 d-flex">
+        <div class="author-thumbnail">
+            <a th:href="@{'/user/my?id='+${follower.id}+''}" class="author-name">
+                <img th:src="${follower.profilePhoto}" alt="">
+            </a>
+        </div>
+        <div class="author-info">
+            <div class="post-meta">
+                <a th:href="@{'/user/my?id='+${follower.id}+''}">
+                    <p th:text="${follower.name}"></p>
+                </a>
+            </div>
+            <p th:text="${follower.intro}"></p>
+
+        </div>
+
+    </div>
+
+    <!-- asdf-->
+
+
+
+</div>
+
+</body>
+</html>

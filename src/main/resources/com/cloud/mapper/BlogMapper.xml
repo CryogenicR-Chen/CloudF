@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.mapper.BlogMapper">
+  <resultMap id="BaseResultMap" type="com.cloud.entity.Blog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="creator" jdbcType="BIGINT" property="creator" />
+    <result column="creator_name" jdbcType="VARCHAR" property="creatorName" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="is_hide" jdbcType="BIT" property="isHide" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="modifier" jdbcType="BIGINT" property="modifier" />
+    <result column="modifier_names" jdbcType="VARCHAR" property="modifierNames" />
+    <result column="creator_url" jdbcType="VARCHAR" property="creatorUrl" />
+    <result column="is_vote" jdbcType="BIT" property="isVote" />
+    <result column="is_private" jdbcType="BIT" property="isPrivate" />
+    <result column="vote_count" jdbcType="BIGINT" property="voteCount" />
+    <result column="comment_count" jdbcType="BIGINT" property="commentCount" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cloud.entity.Blog">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="url" jdbcType="LONGVARCHAR" property="url" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, is_delete, NAME, create_time, delete_time, creator, creator_name, tags, is_hide, 
+    modify_time, modifier, modifier_names, creator_url, is_vote, is_private, vote_count, 
+    comment_count
+  </sql>
+  <sql id="Blob_Column_List">
+    content, url
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.cloud.entity.BlogExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.cloud.entity.BlogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from blog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from blog
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cloud.entity.BlogExample">
+    delete from blog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cloud.entity.Blog">
+    insert into blog (id, is_delete, NAME, 
+      create_time, delete_time, creator, 
+      creator_name, tags, is_hide, 
+      modify_time, modifier, modifier_names, 
+      creator_url, is_vote, is_private, 
+      vote_count, comment_count, content, 
+      url)
+    values (#{id,jdbcType=BIGINT}, #{isDelete,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{deleteTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=BIGINT}, 
+      #{creatorName,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{isHide,jdbcType=BIT}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}, #{modifierNames,jdbcType=VARCHAR}, 
+      #{creatorUrl,jdbcType=VARCHAR}, #{isVote,jdbcType=BIT}, #{isPrivate,jdbcType=BIT}, 
+      #{voteCount,jdbcType=BIGINT}, #{commentCount,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR}, 
+      #{url,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cloud.entity.Blog">
+    insert into blog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="creatorName != null">
+        creator_name,
+      </if>
+      <if test="tags != null">
+        tags,
+      </if>
+      <if test="isHide != null">
+        is_hide,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="modifierNames != null">
+        modifier_names,
+      </if>
+      <if test="creatorUrl != null">
+        creator_url,
+      </if>
+      <if test="isVote != null">
+        is_vote,
+      </if>
+      <if test="isPrivate != null">
+        is_private,
+      </if>
+      <if test="voteCount != null">
+        vote_count,
+      </if>
+      <if test="commentCount != null">
+        comment_count,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="creatorName != null">
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null">
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="isHide != null">
+        #{isHide,jdbcType=BIT},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="modifierNames != null">
+        #{modifierNames,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorUrl != null">
+        #{creatorUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isVote != null">
+        #{isVote,jdbcType=BIT},
+      </if>
+      <if test="isPrivate != null">
+        #{isPrivate,jdbcType=BIT},
+      </if>
+      <if test="voteCount != null">
+        #{voteCount,jdbcType=BIGINT},
+      </if>
+      <if test="commentCount != null">
+        #{commentCount,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cloud.entity.BlogExample" resultType="java.lang.Long">
+    select count(*) from blog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update blog
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=BIT},
+      </if>
+      <if test="record.name != null">
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.deleteTime != null">
+        delete_time = #{record.deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=BIGINT},
+      </if>
+      <if test="record.creatorName != null">
+        creator_name = #{record.creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tags != null">
+        tags = #{record.tags,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isHide != null">
+        is_hide = #{record.isHide,jdbcType=BIT},
+      </if>
+      <if test="record.modifyTime != null">
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifier != null">
+        modifier = #{record.modifier,jdbcType=BIGINT},
+      </if>
+      <if test="record.modifierNames != null">
+        modifier_names = #{record.modifierNames,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creatorUrl != null">
+        creator_url = #{record.creatorUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isVote != null">
+        is_vote = #{record.isVote,jdbcType=BIT},
+      </if>
+      <if test="record.isPrivate != null">
+        is_private = #{record.isPrivate,jdbcType=BIT},
+      </if>
+      <if test="record.voteCount != null">
+        vote_count = #{record.voteCount,jdbcType=BIGINT},
+      </if>
+      <if test="record.commentCount != null">
+        comment_count = #{record.commentCount,jdbcType=BIGINT},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update blog
+    set id = #{record.id,jdbcType=BIGINT},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      delete_time = #{record.deleteTime,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=BIGINT},
+      creator_name = #{record.creatorName,jdbcType=VARCHAR},
+      tags = #{record.tags,jdbcType=VARCHAR},
+      is_hide = #{record.isHide,jdbcType=BIT},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      modifier = #{record.modifier,jdbcType=BIGINT},
+      modifier_names = #{record.modifierNames,jdbcType=VARCHAR},
+      creator_url = #{record.creatorUrl,jdbcType=VARCHAR},
+      is_vote = #{record.isVote,jdbcType=BIT},
+      is_private = #{record.isPrivate,jdbcType=BIT},
+      vote_count = #{record.voteCount,jdbcType=BIGINT},
+      comment_count = #{record.commentCount,jdbcType=BIGINT},
+      content = #{record.content,jdbcType=LONGVARCHAR},
+      url = #{record.url,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update blog
+    set id = #{record.id,jdbcType=BIGINT},
+      is_delete = #{record.isDelete,jdbcType=BIT},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      delete_time = #{record.deleteTime,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=BIGINT},
+      creator_name = #{record.creatorName,jdbcType=VARCHAR},
+      tags = #{record.tags,jdbcType=VARCHAR},
+      is_hide = #{record.isHide,jdbcType=BIT},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      modifier = #{record.modifier,jdbcType=BIGINT},
+      modifier_names = #{record.modifierNames,jdbcType=VARCHAR},
+      creator_url = #{record.creatorUrl,jdbcType=VARCHAR},
+      is_vote = #{record.isVote,jdbcType=BIT},
+      is_private = #{record.isPrivate,jdbcType=BIT},
+      vote_count = #{record.voteCount,jdbcType=BIGINT},
+      comment_count = #{record.commentCount,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloud.entity.Blog">
+    update blog
+    <set>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="creatorName != null">
+        creator_name = #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null">
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="isHide != null">
+        is_hide = #{isHide,jdbcType=BIT},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=BIGINT},
+      </if>
+      <if test="modifierNames != null">
+        modifier_names = #{modifierNames,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorUrl != null">
+        creator_url = #{creatorUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isVote != null">
+        is_vote = #{isVote,jdbcType=BIT},
+      </if>
+      <if test="isPrivate != null">
+        is_private = #{isPrivate,jdbcType=BIT},
+      </if>
+      <if test="voteCount != null">
+        vote_count = #{voteCount,jdbcType=BIGINT},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloud.entity.Blog">
+    update blog
+    set is_delete = #{isDelete,jdbcType=BIT},
+      NAME = #{name,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=BIGINT},
+      creator_name = #{creatorName,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      is_hide = #{isHide,jdbcType=BIT},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=BIGINT},
+      modifier_names = #{modifierNames,jdbcType=VARCHAR},
+      creator_url = #{creatorUrl,jdbcType=VARCHAR},
+      is_vote = #{isVote,jdbcType=BIT},
+      is_private = #{isPrivate,jdbcType=BIT},
+      vote_count = #{voteCount,jdbcType=BIGINT},
+      comment_count = #{commentCount,jdbcType=BIGINT},
+      content = #{content,jdbcType=LONGVARCHAR},
+      url = #{url,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloud.entity.Blog">
+    update blog
+    set is_delete = #{isDelete,jdbcType=BIT},
+      NAME = #{name,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=BIGINT},
+      creator_name = #{creatorName,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      is_hide = #{isHide,jdbcType=BIT},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=BIGINT},
+      modifier_names = #{modifierNames,jdbcType=VARCHAR},
+      creator_url = #{creatorUrl,jdbcType=VARCHAR},
+      is_vote = #{isVote,jdbcType=BIT},
+      is_private = #{isPrivate,jdbcType=BIT},
+      vote_count = #{voteCount,jdbcType=BIGINT},
+      comment_count = #{commentCount,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
