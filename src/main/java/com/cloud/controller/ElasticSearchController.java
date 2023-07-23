@@ -3,7 +3,6 @@ package com.cloud.controller;
 import com.cloud.param.ESParam;
 import com.cloud.service.ElasticSearchService;
 import com.cloud.base.RestResponse;
-import com.cloud.notation.HighPermission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,6 @@ public class ElasticSearchController {
         return new ModelAndView(new RedirectView("localhost:9100"));
     }
 
-    @HighPermission
     @RequestMapping(value = "/synchronization", method = RequestMethod.GET)
     @ApiOperation(value = "synchronize data between Elastcsearch and MySQL")
     public RestResponse<?> synchronization() {

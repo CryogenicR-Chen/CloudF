@@ -2,7 +2,6 @@ package com.cloud.service.impl;
 
 import com.cloud.base.RestResponse;
 import com.cloud.entity.BlogUserBehavior;
-import com.cloud.param.EsQueueParam;
 import com.cloud.param.EsResultParam;
 import com.cloud.service.ElasticSearchService;
 import com.cloud.util.TransUtils;
@@ -79,6 +78,25 @@ public class ElasticSearchImpl implements ElasticSearchService {
             request.id(md5);
             request.timeout(TimeValue.timeValueSeconds(10));
             request.source(JSON.toJSONString(obj), XContentType.JSON);
+            try {
+                restHighLevelClient.index(request, RequestOptions.DEFAULT);
+            }catch (IOException e){
+                System.out.println(e);
+                return RestResponse.error();
+            }
+            return RestResponse.ok();
+        }else {
+            return RestResponse.error();
+        }
+
+    }
+    public RestResponse<?> insertDocument(String index, String id, String obj){
+        IndexRequest request = new IndexRequest(index);
+        String md5 = TransUtils.getMd5(id);
+        if(md5 != null){
+            request.id(md5);
+            request.timeout(TimeValue.timeValueSeconds(10));
+            request.source(obj, XContentType.JSON);
             try {
                 restHighLevelClient.index(request, RequestOptions.DEFAULT);
             }catch (IOException e){

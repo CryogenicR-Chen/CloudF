@@ -12,7 +12,6 @@ import com.cloud.base.RestResponse;
 //import com.cloud.backend.dto.UserModifyDto;
 //import com.cloud.backend.dto.UserRankingPageDto;
 //import com.cloud.backend.model.UserRankingModel;
-import com.cloud.notation.LowPermission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,28 +42,13 @@ public class InfoController {
     BlogService blogService;
 
 
-
-    @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    @ApiOperation(value = "user modify itself")
-    public RestResponse<UserBase> changeInfo(@Valid @RequestBody UserInfoParam param) {
-        return userInfoService.changeInfo(param);
-    }
-
-
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    @ApiOperation(value = "delete account")
-    public RestResponse<?> delete(String mail) {
-        return userInfoService.deleteUser(mail);
-    }
-
     @RequestMapping(value = "/info", method = RequestMethod.POST)
     @ApiOperation(value = "get user' information by id")
-    public RestResponse<?> getUserInfo(String id) {
+    public UserBase getUserInfo(String id) {
         return userInfoService.getUserInfo(id);
     }
 
     @PostMapping("/image")
-    @LowPermission
     @ApiOperation(value = "update profile image")
     public RestResponse<?> changeImage(MultipartFile smfile) {
         return RestResponse.ok(userInfoService.updateImage(smfile));
@@ -81,7 +65,7 @@ public class InfoController {
     public String getUser(Model model,@RequestParam(value = "id", defaultValue = "") String id) {
         UserBase user = null;
         if(!id.equals("")){
-            user = userInfoService.getUserInfo(id).getObj();
+            user = userInfoService.getUserInfo(id);
             model.addAttribute("myself",false);
             model.addAttribute("isFollow",userInfoService.isFollow(Session.getCurrentUser().getId(),user.getId()));
         }else{

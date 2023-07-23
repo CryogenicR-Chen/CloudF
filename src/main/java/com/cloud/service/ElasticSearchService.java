@@ -13,6 +13,8 @@ public interface ElasticSearchService {
 
     RestResponse<?> insertDocument(String index, String id, Object obj);
 
+    RestResponse<?> insertDocument(String index, String id, String obj);
+
     RestResponse<?> deleteDocument(String index, String id);
 
     RestResponse<EsResultParam> searchDocument(String index, String name, String context, int from, int size);

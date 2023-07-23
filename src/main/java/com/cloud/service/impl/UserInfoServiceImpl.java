@@ -56,6 +56,19 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
     }
 
+    public UserBase getUserInfo(String id) {
+
+        UserBaseExample example = new UserBaseExample();
+        example.createCriteria().andIdEqualTo(Long.parseLong(id));
+        List<UserBase> users = userBaseMapper.selectByExampleWithBLOBs(example);
+        if(CollectionUtils.isEmpty(users)){
+            return null;
+        }else{
+            UserBase user = users.get(0);
+            return user;
+        }
+    }
+
 
     @Override
     public void uploadUser(UserBase user) {

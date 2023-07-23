@@ -10,6 +10,8 @@ import com.cloud.mapper.UserBehaviorMapper;
 import com.cloud.service.BlogService;
 import com.cloud.service.ElasticSearchService;
 import com.cloud.service.RestClientService;
+import com.cloud.util.JacksonUtils;
+import com.cloud.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -33,10 +35,10 @@ public class BlogImpl implements BlogService {
     UserBaseMapper userBaseMapper;
 
     @Autowired
-    ElasticSearchService elasticSearchService;
+    RestClientService restClientService;
 
     @Autowired
-    RestClientService restClientService;
+    private RedisUtils redisUtils;
 
     @Override
     public List<Blog> readMore(Integer nextIndex, Integer offset){
@@ -48,11 +50,18 @@ public class BlogImpl implements BlogService {
             recommendationList = Session.getRecommendation().subList(nextIndex, nextIndex + offset);
             Session.setNextIndex(nextIndex+offset);
         }
+        List<Blog> blogs = new ArrayList<>();
         BlogExample example = new BlogExample();
         for (Long id : recommendationList) {
+            if(redisUtils.hasKey(id.toString())){
+                Blog blog = JacksonUtils.string2Obj(redisUtils.getValue(id.toString()), Blog.class);
+                blogs.add(blog);
+                continue;
+            }
             example.or().andIdEqualTo(id);
         }
-        List<Blog> blogs = blogMapper.selectByExampleWithBLOBs(example);
+
+        blogs.addAll(blogMapper.selectByExampleWithBLOBs(example));
         return blogs;
     }
 
@@ -65,6 +74,20 @@ public class BlogImpl implements BlogService {
         ArrayList<Long> list = new ArrayList<>();
         for (Blog blog : blogs) {
             list.add(blog.getId());
+        }
+
+        BlogExample example_re = new BlogExample();
+        for (int i = 0; i < 3; i++) {
+            example_re.or().andIdEqualTo(list.get(i));
+        }
+        List<Blog> blogs_re= blogMapper.selectByExampleWithBLOBs(example);
+
+        for (int i = 0; i < 3; i++) {
+            String key = list.get(i).toString();
+            Blog blog = blogs_re.get(i);
+            if (!redisUtils.hasKey(key)) {
+                redisUtils.set(key,blog);
+            }
         }
         Session.setRecommendation(list);
     }
@@ -89,7 +112,6 @@ public class BlogImpl implements BlogService {
         UserBase build = new UserBase().builder().id(Session.getCurrentUser().getId()).blogNumber(Session.getCurrentUser().getBlogNumber() + 1).build();
         userBaseMapper.updateByPrimaryKeySelective(build);
         BlogUserBehavior blogUserBehavior = new BlogUserBehavior(blogs.get(0), null);
-        elasticSearchService.insertDocument("blogs",blogs.get(0).getName()+blogs.get(0).getCreator(),blogUserBehavior);
 
 
         blog = blogs.get(0);
@@ -320,7 +342,5 @@ public class BlogImpl implements BlogService {
             longs.add(longDoubleEntry.getKey());
         }
         Session.setRecommendation(longs);
-//        File file = new File("./src/main/resources/DemoData.xlsx");
-//        EasyExcel.write(file.getAbsolutePath(), BehaviorExcel.class).sheet("DemoData").doWrite(behaviorExcels);
     }
 }
