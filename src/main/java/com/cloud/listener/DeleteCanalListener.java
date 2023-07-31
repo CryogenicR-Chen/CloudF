@@ -4,16 +4,11 @@ import com.alibaba.otter.canal.protocol.CanalEntry.Column;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
 import com.cloud.event.DeleteAbstractCanalEvent;
 import com.cloud.service.ElasticSearchService;
-import com.cloud.service.impl.ElasticSearchImpl;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 
 @Component

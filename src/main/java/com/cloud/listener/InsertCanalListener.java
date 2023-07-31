@@ -6,15 +6,10 @@ import com.cloud.event.InsertAbstractCanalEvent;
 import com.cloud.service.ElasticSearchService;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 
 @Component

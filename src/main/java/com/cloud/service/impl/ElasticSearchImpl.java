@@ -109,7 +109,19 @@ public class ElasticSearchImpl implements ElasticSearchService {
         }
 
     }
+    public void insertDocument_mq(String index, String id, String obj) throws IOException {
+        IndexRequest request = new IndexRequest(index);
+        String md5 = TransUtils.getMd5(id);
+        if(md5 != null){
+            request.id(md5);
+            request.timeout(TimeValue.timeValueSeconds(10));
+            request.source(obj, XContentType.JSON);
+            restHighLevelClient.index(request, RequestOptions.DEFAULT);
+        }else {
+           throw new IOException();
+        }
 
+    }
     public RestResponse<?> deleteDocument(String index, String id) {
         id = TransUtils.getMd5(id);
         DeleteRequest request = new DeleteRequest(index, id);

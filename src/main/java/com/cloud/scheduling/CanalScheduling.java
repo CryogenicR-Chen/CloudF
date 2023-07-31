@@ -8,9 +8,9 @@ import com.alibaba.otter.canal.protocol.Message;
 import com.cloud.event.DeleteAbstractCanalEvent;
 import com.cloud.event.InsertAbstractCanalEvent;
 import com.cloud.event.UpdateAbstractCanalEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.cloud.rabbitmq.MessageSender;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,6 +27,9 @@ public class CanalScheduling implements Runnable, ApplicationContextAware {
     @Resource
     private CanalConnector canalConnector;
 
+    @Autowired
+    private MessageSender messageSender;
+
     @Scheduled(fixedDelay = 1000)
     @Override
     public void run() {
@@ -39,7 +42,7 @@ public class CanalScheduling implements Runnable, ApplicationContextAware {
                 if (batchId != -1 && entries.size() > 0) {
                     entries.forEach(entry -> {
                         if (entry.getEntryType() == EntryType.ROWDATA) {
-                            publishCanalEvent(entry);
+                            publishCanalEventToMQ(entry);
                         }
                     });
                 }
@@ -51,6 +54,10 @@ public class CanalScheduling implements Runnable, ApplicationContextAware {
         }
     }
 
+    private void publishCanalEventToMQ(Entry entry) {
+        messageSender.sendDirectMessage(entry);
+    }
+    @Deprecated
     private void publishCanalEvent(Entry entry) {
         EventType eventType = entry.getHeader().getEventType();
         switch (eventType) {
